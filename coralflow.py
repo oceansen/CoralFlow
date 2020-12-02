@@ -21,7 +21,7 @@ breathing_min=0
 breathing_max=4096
 breathing_range = breathing_max - breathing_min
 slope_shift=2
-lookBackInRealtime = 70 # Number of points to lookback, must less than 100, higher the number more current the value but with more variability
+lookBackInRealtime = 50 # Number of points to lookback, must be less than 100, higher the number more current the value but with more variability
 
 # BLE heart rate service
 #hr_ble_service_uuid ="0000180d-0000-1000-8000-00805f9b34fb"
@@ -62,8 +62,8 @@ class FlowDelegate(btle.DefaultDelegate):
         
         #Run the loop to process a buffer of 100 sensor values 
         if(len(self.buffer)>100):
-            self.abdomen=self.buffer[0:100]
-            self.buffer = self.buffer[lookBackInRealtime:]   
+            self.abdomen=self.buffer[-100:]
+            self.buffer = self.buffer[-lookBackInRealtime:]   
             self.featurize()
             self.predict()
         if(len(self.currentPower)>1):
@@ -99,7 +99,7 @@ class FlowDelegate(btle.DefaultDelegate):
         #threading.Timer(5.0, self.printPower).start()
         #print("Input="+str(self.abdomen))
         
-        print("Estimated Power="+str(self.currentPower[-1]))
+        print("Estimated Power="+str(self.currentPower[-1])+"Watts")
 
 def calculate_slope(data, shift=2, rolling_mean_window=1, absvalue=False):
     """Calculate slope.
