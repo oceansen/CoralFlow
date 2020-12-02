@@ -9,4 +9,4 @@ scp models/model.tflite pi@raspberrypi.local:/home/pi/Sagar/CoralFlow/models
 ::Execute CoralFlow to Connect to Bluetooth Sensor and use Model on Sensor Data
 scp coralflow.py pi@raspberrypi.local:/home/pi/Sagar/CoralFlow
 
-ssh pi@raspberrypi.local "python3 /home/pi/Sagar/CoralFlow/coralflow.py"
+ssh pi@raspberrypi.local "python3 /home/pi/Sagar/CoralFlow/main.py"
