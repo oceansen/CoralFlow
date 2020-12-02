@@ -1,5 +1,5 @@
 
-::Copy TensorFlow Lite Model and Compile Edge TPU version
+::Copy TensorFlow Lite Model To Predict Power from Abdominal Breathing
 scp models/model.tflite pi@raspberrypi.local:/home/pi/Sagar/CoralFlow/models
 
 ::Command to install required libraries on Raspberry Pi
@@ -7,6 +7,6 @@ scp models/model.tflite pi@raspberrypi.local:/home/pi/Sagar/CoralFlow/models
 ::ssh pi@raspberrypi.local "pip3 install scikit-learn --index-url https://piwheels.org/simple"
 
 ::Execute CoralFlow to Connect to Bluetooth Sensor and use Model on Sensor Data
-scp coralflow.py pi@raspberrypi.local:/home/pi/Sagar/CoralFlow
+scp main.py pi@raspberrypi.local:/home/pi/Sagar/CoralFlow
 
 ssh pi@raspberrypi.local "python3 /home/pi/Sagar/CoralFlow/main.py"
