@@ -12,6 +12,7 @@ import threading
 
 #Flow sensor address, service, and characteristic
 flow_ble_address = "f3:aa:b3:f6:ab:b0"
+
 flow_ble_service_uuid = UUID('ffb0')
 flow_ble_characteristic_uuid = UUID('ffb3')
 
