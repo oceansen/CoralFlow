@@ -1,4 +1,5 @@
 # CoralFlow
+# Created by Sagar Sen 2020
 This program runs on the Raspberry Pi and computes power in watts (as measured on the Concept2 Power Bike) from abdominal breathing measured using the Sweetzpot Flow sensor: https://www.sweetzpot.com/.
 
 The program uses a machine learning model primarily developed for predicting cycling power.
@@ -9,11 +10,7 @@ Simple steps to using the tool.
 
 Step 1: 
 
-Change the MAC address of the Flow Bluetooth Sensor in main.py
-
-
-flow_ble_address = "f3:aa:b3:f6:ab:b0"
-
+Change the MAC address of the Flow Bluetooth Sensor in main.py by changing variable flow_ble_address if necessary
 
 
 Step 2:
