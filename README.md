@@ -1,5 +1,6 @@
 # CoralFlow
-Copyright(c) Sagar Sen 2020. All Rights Reserved
+Copyright(c) Sagar Sen 2020. All Rights Reserved.
+
 This program runs on the Raspberry Pi and computes power in watts (as measured on the Concept2 Power Bike) from abdominal breathing measured using the Sweetzpot Flow sensor: https://www.sweetzpot.com/.
 
 The program uses a machine learning model primarily developed for predicting cycling power.
