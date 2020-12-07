@@ -2,14 +2,17 @@ import sys
 from bluepy import btle
 from bluepy.btle import UUID, Peripheral
 import binascii
-import time
 import numpy as np
 import struct
 import tflite_runtime.interpreter as tflite
 import numpy as np
 import pandas as pd
 import threading
+from art import *
 
+import itertools
+import time 
+import os
 #Flow sensor address, service, and characteristic
 flow_ble_address = "f3:aa:b3:f6:ab:b0"
 
@@ -23,6 +26,7 @@ breathing_max=4096
 breathing_range = breathing_max - breathing_min
 slope_shift=2
 lookBackInRealtime = 50 # Number of points to lookback, must be less than 100, higher the number more current the value but with more variability
+
 
 # BLE heart rate service
 #hr_ble_service_uuid ="0000180d-0000-1000-8000-00805f9b34fb"
@@ -38,6 +42,7 @@ def enable_notify(peripheral, service_uuid, char_uuid):
     print('Characteristic handle: %d' % ch.valHandle)
     notify_handle = ch.getHandle() + 1
     peripheral.writeCharacteristic(notify_handle, setup_data, withResponse=True)
+    print('Computing power from breathing...wait 10 seconds...')
 
 class FlowDelegate(btle.DefaultDelegate):
     
@@ -51,9 +56,15 @@ class FlowDelegate(btle.DefaultDelegate):
         self.currentPower=[]
         self.interpreter = tflite.Interpreter(model_path="/home/pi/Sagar/CoralFlow/models/model.tflite")
         self.interpreter.allocate_tensors()
+        
+        
+       
         # Get input and output tensors.
         self.input_details = self.interpreter.get_input_details()
         self.output_details = self.interpreter.get_output_details()
+        
+
+
         # ... initialise here
 
     def handleNotification(self, cHandle, data):
@@ -67,10 +78,11 @@ class FlowDelegate(btle.DefaultDelegate):
             self.buffer = self.buffer[-lookBackInRealtime:]   
             self.featurize()
             self.predict()
+            
         if(len(self.currentPower)>1):
             self.printPower()
             
-            
+
     def featurize(self):
         data=pd.DataFrame(self.abdomen)
         #Normalize
@@ -93,14 +105,31 @@ class FlowDelegate(btle.DefaultDelegate):
         # Use `tensor()` in order to get a pointer to the tensor.
         output_data = self.interpreter.get_tensor(self.output_details[0]['index'])
         self.currentPower.extend(output_data)
+        
         if(len(self.currentPower)==100):
             self.currentPower=self.currentPower[-1]
+            
         
     def printPower(self):
         #threading.Timer(5.0, self.printPower).start()
         #print("Input="+str(self.abdomen))
         
-        print("Estimated Power="+str(self.currentPower[-1])+"Watts")
+        #print("Estimated Power="+str(self.currentPower[-1][0])+"Watts")
+        #print(self.currentPower)
+
+        Art=text2art(str(int(self.currentPower[-1][0]))+ " W")
+        print(Art) 
+        #time.sleep(1)
+        #os.system('clear')
+
+
+
+
+        
+        
+        
+    
+
 
 def calculate_slope(data, shift=2, rolling_mean_window=1, absvalue=False):
     """Calculate slope.
@@ -146,8 +175,12 @@ if __name__ == "__main__":
     while True:
         if _ble_peripheral.waitForNotifications(0.007):
         # handleNotification() was called in delegate
+            
+            
+            
             continue
-
+            
+    
     # inform user main loop is running
-        sys.stdout.write('.')
+        #sys.stdout.write('.')
         sys.stdout.flush()
